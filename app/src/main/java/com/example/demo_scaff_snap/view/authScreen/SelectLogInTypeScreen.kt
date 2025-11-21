@@ -252,19 +252,16 @@ fun SelectLogInTypeScreen(navController: NavController) {
             Button(
                 onClick = {
                     when (selectedRole) {
-                        "PM" ->
-                            navController.navigate(Screen.LogInScreen.route) {
-                                popUpTo(Screen.SelectLogInTypeScreen.route) { inclusive = false }
-                            }
+                        "PM" -> navController.navigate(Screen.LogInScreen.route) {
+                            popUpTo(Screen.SelectLogInTypeScreen.route) { inclusive = false }
+                        }
 
-                        "CP" ->
-                            navController.navigate(Screen.LogInScreen.route) {
-                                popUpTo(Screen.SelectLogInTypeScreen.route) { inclusive = false }
-                            }
+                        "CP" -> navController.navigate(Screen.LogInScreen.route) {
+                            popUpTo(Screen.SelectLogInTypeScreen.route) { inclusive = false }
+                        }
 
-                        else ->
-                            Toast.makeText(context, "Please select a role", Toast.LENGTH_SHORT)
-                                .show()
+                        else -> Toast.makeText(context, "Please select a role", Toast.LENGTH_SHORT)
+                            .show()
                     }
 
                 },

@@ -27,25 +27,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.demo_scaff_snap.R
 import com.example.demo_scaff_snap.utils.FontUtils
-import com.example.demo_scaff_snap.view.Screen
 
-/*@Preview (showBackground = true)*/
+/*@Preview(showBackground = true)*/
 @Composable
-fun LogInScreen(navController: NavController) {
+fun ForgotPasswordScreen(navController: NavController) {
 
-    var companyID by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -73,7 +68,7 @@ fun LogInScreen(navController: NavController) {
                     })
 
             Text(
-                text = "LOGIN",
+                text = "FORGOT PASSWORD",
                 color = Color.White,
                 modifier = Modifier
                     .weight(1f)
@@ -102,42 +97,6 @@ fun LogInScreen(navController: NavController) {
                     .width(150.dp)
                     .padding(top = 30.dp)
             )
-            // Title
-            Text(
-                text = "LOGIN AS A Project Manager",
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                color = Color.Black,
-                fontFamily = FontUtils.poppinsSemiBold,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 20.dp)
-            )
-
-            Text(
-                text = "Enter your credentials to continue",
-                fontSize = 14.sp,
-                color = colorResource(id = R.color.textColor),
-                fontFamily = FontUtils.poppinsRegular,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-
-            OutlinedTextField(
-                value = companyID,
-                onValueChange = { companyID = it },
-                label = {
-                    Text(
-                        "Company ID", fontFamily = FontUtils.poppinsRegular, fontSize = 14.sp
-                    )
-                },
-                textStyle = TextStyle(
-                    fontFamily = FontUtils.poppinsRegular, fontSize = 14.sp, color = Color.Black
-                ),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 30.dp)
-            )
 
             OutlinedTextField(
                 value = email,
@@ -153,48 +112,11 @@ fun LogInScreen(navController: NavController) {
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 10.dp)
+                    .padding(top = 30.dp)
             )
-
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = {
-                    Text(
-                        "Password", fontFamily = FontUtils.poppinsRegular, fontSize = 14.sp
-                    )
-                },
-                textStyle = TextStyle(
-                    fontFamily = FontUtils.poppinsRegular, fontSize = 14.sp, color = Color.Black
-                ),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp)
-            )
-
-            Text(
-                text = "Forgot Password?",
-                fontWeight = FontWeight.Bold,
-                fontSize = 12.sp,
-                color = colorResource(id = R.color.customBlue),
-                fontFamily = FontUtils.poppinsMedium,
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(top = 12.dp)
-                    .clickable {
-                        navController.navigate(Screen.ForgotPasswordScreen.route) {
-                            popUpTo(Screen.SelectLogInTypeScreen.route) { inclusive = false }
-                        }
-                    })
 
             Button(
-                onClick = {
-                    navController.navigate(Screen.PmMainScreen.route) {
-                        popUpTo(Screen.LogInScreen.route) { inclusive = false }
-
-                    }
-                },
+                onClick = { /* Handle submit */ },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)
@@ -206,7 +128,7 @@ fun LogInScreen(navController: NavController) {
                 )
             ) {
                 Text(
-                    text = "SUBMIT", style = TextStyle(
+                    text = "SUBMIT REQUEST", style = TextStyle(
                         fontSize = 14.sp, fontFamily = FontUtils.poppinsSemiBold
                     )
                 )
