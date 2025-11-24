@@ -16,12 +16,13 @@ import com.example.demo_scaff_snap.R
 @Composable
 fun RecentItemCard() {
 
-    ConstraintLayout(modifier = Modifier.fillMaxWidth().wrapContentHeight()){
-        Box(modifier = Modifier
-            .paint(
-                painter = painterResource(id = R.drawable.et_backgrund_white),
-                contentScale = ContentScale.FillBounds
-            )
+    ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
+        Box(
+            modifier = Modifier
+                .paint(
+                    painter = painterResource(id = R.drawable.et_backgrund_white),
+                    contentScale = ContentScale.FillBounds
+                )
         ) {
 
         }
