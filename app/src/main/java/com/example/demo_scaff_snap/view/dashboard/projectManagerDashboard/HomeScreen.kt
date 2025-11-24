@@ -14,13 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,8 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import com.example.demo_scaff_snap.R
+import com.example.demo_scaff_snap.view.RecentItemCard
 
 @Preview(showBackground = true)
 @Composable
@@ -105,8 +104,6 @@ fun HomeScreen() {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }) {
-
-
                 Box(
                     modifier = Modifier
                         .width(200.dp)
@@ -310,8 +307,6 @@ fun HomeScreen() {
                         )
                     }
                 }
-
-
             }
 
             Text(
@@ -325,6 +320,7 @@ fun HomeScreen() {
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
+
         }
     }
 }
