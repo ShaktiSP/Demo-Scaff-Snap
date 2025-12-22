@@ -15,9 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
@@ -31,12 +29,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.example.demo_scaff_snap.R
-import com.example.demo_scaff_snap.view.RecentItemCard
+import com.example.demo_scaff_snap.view.items.ItemScaffold
 
 @Preview(showBackground = true)
 @Composable
@@ -45,9 +45,8 @@ fun HomeScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            //.verticalScroll(rememberScrollState())
             .background(Color.White)
-            .padding(10.dp)
     ) {
 
         ConstraintLayout(
@@ -56,12 +55,13 @@ fun HomeScreen() {
                 .background(Color.White)
                 .padding(10.dp)
         ) {
-            val (profile, statsGrid, itemOne, itemTwo, itemThree, itemFour, tvQuickFilter, tvPro, tvRS, clMain, clHigh, clRed, clMod, clPA, clPB, rvLC) = createRefs()
+            val (profile, statsGrid, itemOne, itemTwo, itemThree, itemFour, tvQuickFilter, rvLC) = createRefs()
 
             // Profile Bar
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(start = 10.dp, end = 10.dp)
                     .constrainAs(profile) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
@@ -76,19 +76,29 @@ fun HomeScreen() {
                     contentScale = ContentScale.Crop
                 )
 
+                Spacer(modifier = Modifier.width(12.dp))
+
                 Column(
-                    horizontalAlignment = Alignment.Start,   // <-- Start alignment added
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.Start
                 ) {
-                    Text("Hi, John Carter", fontWeight = FontWeight.Bold)
-                    Text("Project Manager", color = Color.Gray)
+                    Text(
+                        "Hi, John Carter",
+                        textAlign = TextAlign.Start,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        "Project Manager",
+                        textAlign = TextAlign.Start,
+                        color = Color.Gray
+                    )
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.Notifications, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
                     Surface(
-                        shape = CircleShape,
-                        color = Color(0xFFFEBD47)
+                        shape = CircleShape, color = Color(0xFFFEBD47)
                     ) {
                         Text("JC", modifier = Modifier.padding(8.dp))
                     }
@@ -103,20 +113,21 @@ fun HomeScreen() {
                         top.linkTo(profile.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
-                    }) {
+                    })
+            {
                 Box(
                     modifier = Modifier
-                        .width(200.dp)
                         .height(140.dp)
                         .paint(
                             painter = painterResource(id = R.drawable.ic_totall_scaffold),
                             contentScale = ContentScale.FillBounds
                         )
-                        .padding(18.dp)
+                        .padding(24.dp)
                         .constrainAs(itemOne) {
                             top.linkTo(parent.top)
                             end.linkTo(itemTwo.start)
                             start.linkTo(parent.start)
+                            width = Dimension.fillToConstraints
                         }) {
 
                     Column(
@@ -156,18 +167,18 @@ fun HomeScreen() {
 
                 Box(
                     modifier = Modifier
-                        .width(200.dp)
                         .height(140.dp)
                         .constrainAs(itemTwo) {
                             top.linkTo(itemOne.top)
                             start.linkTo(itemOne.end)
                             end.linkTo(parent.end)
+                            width = Dimension.fillToConstraints
                         }
                         .paint(
                             painter = painterResource(id = R.drawable.ic_total_project),
                             contentScale = ContentScale.FillBounds
                         )
-                        .padding(18.dp)) {
+                        .padding(24.dp)) {
 
                     Column(
                         modifier = Modifier
@@ -205,21 +216,20 @@ fun HomeScreen() {
                     }
                 }
 
-
                 Box(
                     modifier = Modifier
-                        .width(200.dp)
                         .height(140.dp)
                         .constrainAs(itemThree) {
                             top.linkTo(itemOne.bottom)
                             start.linkTo(parent.start)
                             end.linkTo(itemFour.start)
+                            width = Dimension.fillToConstraints
                         }
                         .paint(
                             painter = painterResource(id = R.drawable.ic_pending_request),
                             contentScale = ContentScale.FillBounds
                         )
-                        .padding(18.dp)) {
+                        .padding(24.dp)) {
 
                     Column(
                         modifier = Modifier
@@ -259,18 +269,18 @@ fun HomeScreen() {
 
                 Box(
                     modifier = Modifier
-                        .width(200.dp)
                         .height(140.dp)
                         .constrainAs(itemFour) {
                             top.linkTo(itemThree.top)
                             start.linkTo(itemThree.end)
                             end.linkTo(parent.end)
+                            width = Dimension.fillToConstraints
                         }
                         .paint(
                             painter = painterResource(id = R.drawable.ic_active_scaffolds),
                             contentScale = ContentScale.FillBounds
                         )
-                        .padding(18.dp)) {
+                        .padding(24.dp)) {
 
                     Column(
                         modifier = Modifier
@@ -312,7 +322,7 @@ fun HomeScreen() {
             Text(
                 text = "Recent Scaffolds",
                 modifier = Modifier
-                    .padding(top = 16.dp)
+                    .padding(top = 16.dp, start = 10.dp)
                     .constrainAs(tvQuickFilter) {
                         top.linkTo(statsGrid.bottom)
                     },
@@ -321,6 +331,19 @@ fun HomeScreen() {
                 fontWeight = FontWeight.Bold
             )
 
+            LazyColumn(
+                modifier = Modifier.constrainAs(rvLC) {
+                    top.linkTo(tvQuickFilter.bottom)
+                    start.linkTo(tvQuickFilter.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                    height = Dimension.fillToConstraints
+                    width = Dimension.fillToConstraints
+                }) {
+                items(10) { index ->
+                    ItemScaffold()
+                }
+            }
         }
     }
 }

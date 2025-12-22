@@ -192,7 +192,6 @@ fun LogInScreen(navController: NavController) {
                 onClick = {
                     navController.navigate(Screen.PmMainScreen.route) {
                         popUpTo(Screen.LogInScreen.route) { inclusive = false }
-
                     }
                 },
                 modifier = Modifier

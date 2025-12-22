@@ -46,11 +46,9 @@ import java.io.File
 import com.example.demo_scaff_snap.R
 import com.example.demo_scaff_snap.utils.FontUtils
 
-
 @Composable
 fun RegisterYourCompanyScreen(navController: NavController) {
     val context = LocalContext.current
-
     val scrollState = rememberScrollState()
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     var selectedBitmap by remember { mutableStateOf<Bitmap?>(null) }
@@ -119,10 +117,9 @@ fun RegisterYourCompanyScreen(navController: NavController) {
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val place = Autocomplete.getPlaceFromIntent(result.data!!)
-  //          address = place.address ?: ""
+            //          address = place.address ?: ""
         }
     }
-
 
     if (showSettingsDialog) {
         AlertDialog(

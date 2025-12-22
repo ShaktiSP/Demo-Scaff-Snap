@@ -5,7 +5,9 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.demo_scaff_snap.R
 
@@ -29,7 +31,10 @@ fun BottomNavigationBar(navController: NavHostController) {
         BottomNavItem.MyProjects
     )
 
-    NavigationBar {
+    NavigationBar(
+        containerColor = Color.White,
+        tonalElevation = 0.dp
+    ) {
         val currentDestination = navController.currentDestination
         items.forEach { item ->
             NavigationBarItem(
