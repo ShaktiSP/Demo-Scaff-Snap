@@ -7,12 +7,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,13 +38,14 @@ import com.example.demo_scaff_snap.view.items.ItemScaffold
 @Composable
 fun ScaffoldLogScreen() {
 
+    var searchText by remember { mutableStateOf("") }
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-
     ) {
-        val (clMain, tvTitle, ivFilter, rvLC) = createRefs()
+        val (clMain, tvTitle, icScan, ivFilter, etSearch, rvLC) = createRefs()
 
         ConstraintLayout(
             modifier = Modifier
@@ -50,10 +62,10 @@ fun ScaffoldLogScreen() {
                 }
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_menue),
+                painter = painterResource(id = R.drawable.ic_bg_scan),
                 contentDescription = "Menu Icon",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.constrainAs(ivFilter) {
+                modifier = Modifier.constrainAs(icScan) {
                     top.linkTo(parent.top)
                     end.linkTo(parent.end, margin = (16.dp))
                     centerVerticallyTo(parent)
@@ -67,19 +79,70 @@ fun ScaffoldLogScreen() {
                 fontSize = 14.sp,
                 color = Color.White,
                 modifier = Modifier.constrainAs(tvTitle) {
-                    top.linkTo(ivFilter.top)
-                    bottom.linkTo(ivFilter.bottom)
+                    top.linkTo(icScan.top)
+                    bottom.linkTo(icScan.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
             )
         }
 
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+                .constrainAs(etSearch) {
+                    top.linkTo(clMain.bottom)
+                    start.linkTo(parent.start, margin = 10.dp)
+                    end.linkTo(ivFilter.start, margin = 10.dp)
+                    width = Dimension.fillToConstraints
+                },
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 1.dp
+            )
+        ) {
+            TextField(
+                value = searchText,
+                onValueChange = { searchText = it },
+                placeholder = {
+                    Text("Search Scaffold ID")
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = { /* perform search */ }
+                ),
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    disabledContainerColor = Color.White,
+
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                )
+            )
+        }
+
+        Image(
+            painter = painterResource(id = R.drawable.ic_mage_filter),
+            contentDescription = "Menu Icon",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.constrainAs(ivFilter) {
+                top.linkTo(etSearch.top,  margin = (10.dp))
+                bottom.linkTo(etSearch.bottom)
+                end.linkTo(parent.end, margin = (10.dp))
+            }
+        )
+
         LazyColumn(
             modifier = Modifier
                 .padding(10.dp)
                 .constrainAs(rvLC) {
-                    top.linkTo(clMain.bottom)
+                    top.linkTo(etSearch.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom)

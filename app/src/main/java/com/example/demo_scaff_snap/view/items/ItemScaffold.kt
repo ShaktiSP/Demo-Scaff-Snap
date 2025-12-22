@@ -52,29 +52,27 @@ fun ItemScaffold() {
         ) {
             val (view, scaffoldID, tvTag, scaffoldName, locationIcon, location, tvNavigate, dashLine, status, priority, tvStatusName, tvPriority) = createRefs()
 
-            Box(
-                modifier = Modifier
-                    .width(4.dp)
-                    .height(40.dp)
-                    .constrainAs(view) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                    }
-                    .background(
-                        brush = Brush.verticalGradient(
-                            listOf(
-                                Color(0xFFFDB001), Color(0xFFD66801)
-                            )
-                        ), shape = RoundedCornerShape(4.dp)
-                    ))
+            Box(modifier = Modifier
+                .width(4.dp)
+                .height(40.dp)
+                .constrainAs(view) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                }
+                .background(
+                    brush = Brush.verticalGradient(
+                        listOf(
+                            Color(0xFFFDB001), Color(0xFFD66801)
+                        )
+                    ), shape = RoundedCornerShape(4.dp)
+                ))
 
             Text(
                 text = "SCF-SC-2025-001",
                 fontFamily = FontUtils.poppinsSemiBold,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .constrainAs(scaffoldID) {
+                modifier = Modifier.constrainAs(scaffoldID) {
                         top.linkTo(view.top)
                         start.linkTo(view.end, margin = 8.dp)
                         end.linkTo(tvTag.start)
@@ -82,19 +80,18 @@ fun ItemScaffold() {
                         width = Dimension.fillToConstraints
                     })
 
-            Box(
-                modifier = Modifier
-                    .constrainAs(tvTag) {
-                        top.linkTo(scaffoldID.top)
-                        bottom.linkTo(scaffoldID.bottom)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints   // 0dp width
-                    }
-                    .paint(
-                        painter = painterResource(id = R.drawable.ic_green_rectangle),
-                        contentScale = ContentScale.FillBounds
-                    )
-                    .padding(horizontal = 12.dp, vertical = 10.dp)) {
+            Box(modifier = Modifier
+                .constrainAs(tvTag) {
+                    top.linkTo(scaffoldID.top)
+                    bottom.linkTo(scaffoldID.bottom)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints   // 0dp width
+                }
+                .paint(
+                    painter = painterResource(id = R.drawable.ic_green_rectangle),
+                    contentScale = ContentScale.FillBounds
+                )
+                .padding(horizontal = 12.dp, vertical = 10.dp)) {
                 Text(
                     text = "High",
                     fontFamily = FontUtils.poppinsMedium,
@@ -190,18 +187,17 @@ fun ItemScaffold() {
                     start.linkTo(tvPriority.start)
                 })
 
-            Box(
-                modifier = Modifier
-                    .constrainAs(tvStatusName) {
-                        top.linkTo(status.bottom, margin = 2.dp)
-                        start.linkTo(dashLine.start)
-                        end.linkTo(tvPriority.start)
-                        width = Dimension.fillToConstraints   // 0dp width
-                    }
-                    .background(
-                        color = Color(0xFFEFEFEF), shape = RoundedCornerShape(8.dp)
-                    )
-                    .padding(horizontal = 12.dp, vertical = 10.dp)) {
+            Box(modifier = Modifier
+                .constrainAs(tvStatusName) {
+                    top.linkTo(status.bottom, margin = 2.dp)
+                    start.linkTo(dashLine.start)
+                    end.linkTo(tvPriority.start)
+                    width = Dimension.fillToConstraints   // 0dp width
+                }
+                .background(
+                    color = Color(0xFFEFEFEF), shape = RoundedCornerShape(8.dp)
+                )
+                .padding(horizontal = 12.dp, vertical = 10.dp)) {
                 Text(
                     text = "Status",
                     fontFamily = FontUtils.poppinsMedium,
@@ -212,18 +208,17 @@ fun ItemScaffold() {
                 )
             }
 
-            Box(
-                modifier = Modifier
-                    .constrainAs(tvPriority) {
-                        top.linkTo(status.bottom, margin = 2.dp)
-                        start.linkTo(tvStatusName.end, margin = 6.dp)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints   // 0dp width
-                    }
-                    .background(
-                        color = Color(0xFFEFEFEF), shape = RoundedCornerShape(8.dp)
-                    )
-                    .padding(horizontal = 12.dp, vertical = 10.dp)) {
+            Box(modifier = Modifier
+                .constrainAs(tvPriority) {
+                    top.linkTo(status.bottom, margin = 2.dp)
+                    start.linkTo(tvStatusName.end, margin = 6.dp)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints   // 0dp width
+                }
+                .background(
+                    color = Color(0xFFEFEFEF), shape = RoundedCornerShape(8.dp)
+                )
+                .padding(horizontal = 12.dp, vertical = 10.dp)) {
                 Text(
                     text = "Status",
                     fontFamily = FontUtils.poppinsMedium,
