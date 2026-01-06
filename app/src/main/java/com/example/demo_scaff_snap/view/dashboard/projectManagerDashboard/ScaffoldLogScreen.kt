@@ -1,7 +1,12 @@
 package com.example.demo_scaff_snap.view.dashboard.projectManagerDashboard
 
+import android.R.attr.onClick
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,8 +25,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -39,6 +46,7 @@ import com.example.demo_scaff_snap.view.items.ItemScaffold
 fun ScaffoldLogScreen() {
 
     var searchText by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     ConstraintLayout(
         modifier = Modifier
@@ -51,9 +59,10 @@ fun ScaffoldLogScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(65.dp)
-                .background(Color.White)
                 .background(
-                    color = Color(0xFFFDB001)
+                    Brush.verticalGradient(
+                        colors = listOf(Color(0xFFFDB001), Color(0xFFD66801))
+                    )
                 )
                 .constrainAs(clMain) {
                     top.linkTo(parent.top)
@@ -148,9 +157,20 @@ fun ScaffoldLogScreen() {
                     bottom.linkTo(parent.bottom)
                     height = Dimension.fillToConstraints
                     width = Dimension.fillToConstraints
-                }) {
+                }
+        ) {
             items(10) { index ->
-                ItemScaffold()
+                Box(
+                    modifier = Modifier.clickable {
+                        Toast.makeText(
+                            context,
+                            "Clicked item: $index",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                ) {
+                    ItemScaffold()
+                }
             }
         }
     }
