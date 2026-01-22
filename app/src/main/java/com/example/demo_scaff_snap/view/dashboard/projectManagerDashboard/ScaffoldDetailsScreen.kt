@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -14,11 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,7 +27,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.demo_scaff_snap.R
 import com.example.demo_scaff_snap.utils.FontUtils
-import org.checkerframework.checker.units.qual.mPERs
 
 @Preview(showBackground = true)
 @Composable
@@ -40,13 +38,12 @@ fun ScaffoldDetailsScreen() {
             .background(Color.White)
     ) {
         val (clMain, tvTitle, icScan, etSearch, tvPriority, tvTag, tvChange,
-            tvDetails, tvPM) = createRefs()
+            tvDetails, tvPM, ivOne, tvProjectManager) = createRefs()
 
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(65.dp)
-
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(Color(0xFFFDB001), Color(0xFFD66801))
@@ -172,8 +169,28 @@ fun ScaffoldDetailsScreen() {
                         top.linkTo(tvDetails.bottom, margin = 8.dp)
                         start.linkTo(tvDetails.start)
                     })
+
+                Image(
+                    painter = painterResource(R.drawable.ic_location),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .constrainAs(ivOne) {
+                            top.linkTo(tvProjectManager.top)
+                            start.linkTo(tvPM.start)
+                            end.linkTo(tvProjectManager.start)
+                        })
+
+                Text(
+                    text = "Boiler Unit 3 Upgrade",
+                    fontFamily = FontUtils.poppinsRegular,
+                    fontSize = 12.sp,
+                    color = Color.Black,
+                    modifier = Modifier.constrainAs(tvProjectManager) {
+                        top.linkTo(tvPM.bottom, margin = 8.dp)
+                        start.linkTo(ivOne.end, margin = 4.dp)
+                    })
             }
         }
-
     }
 }

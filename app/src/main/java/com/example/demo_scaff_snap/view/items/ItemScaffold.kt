@@ -50,7 +50,8 @@ fun ItemScaffold() {
                 .background(Color.White)
                 .padding(16.dp)
         ) {
-            val (view, scaffoldID, tvTag, scaffoldName, locationIcon, location, tvNavigate, dashLine, status, priority, tvStatusName, tvPriority) = createRefs()
+            val (view, scaffoldID, tvTag, scaffoldName, locationIcon, location,
+                tvNavigate, dashLine, status, priority, tvStatusName, tvPriority) = createRefs()
 
             Box(modifier = Modifier
                 .width(4.dp)

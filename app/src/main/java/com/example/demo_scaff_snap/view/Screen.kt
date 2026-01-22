@@ -11,7 +11,7 @@ import com.example.demo_scaff_snap.view.authScreen.RegisterYourCompanyScreen
 import com.example.demo_scaff_snap.view.authScreen.RoleSelectionScreen
 import com.example.demo_scaff_snap.view.authScreen.SelectLogInTypeScreen
 import com.example.demo_scaff_snap.view.authScreen.SplashScreen
-import com.example.demo_scaff_snap.view.dashboard.projectManagerDashboard.PmMainScreen
+import com.example.demo_scaff_snap.view.dashboard.projectManagerDashboard.pmScreen.PmMainScreen
 
 sealed class Screen(val route: String) {
     object Splash : Screen("splash")
@@ -22,6 +22,8 @@ sealed class Screen(val route: String) {
     object LogInScreen : Screen("logInScreen")
     object ForgotPasswordScreen : Screen("forgotPasswordScreen")
     object PmMainScreen : Screen("pmMainScreen")
+
+
 }
 
 @Composable
@@ -60,6 +62,5 @@ fun AppNavHost(startDestination: String = Screen.Splash.route) {
         composable(Screen.PmMainScreen.route) {
             PmMainScreen()
         }
-
     }
 }

@@ -1,8 +1,5 @@
 package com.example.demo_scaff_snap.view.dashboard.projectManagerDashboard
 
-import android.R.attr.onClick
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,18 +29,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.navigation.NavController
 import com.example.demo_scaff_snap.R
 import com.example.demo_scaff_snap.utils.FontUtils
+import com.example.demo_scaff_snap.view.Screen
 import com.example.demo_scaff_snap.view.items.ItemScaffold
-
-@Preview(showBackground = true)
 @Composable
-fun ScaffoldLogScreen() {
+fun ScaffoldLogScreen(navController : NavController) {
 
     var searchText by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -162,11 +158,7 @@ fun ScaffoldLogScreen() {
             items(10) { index ->
                 Box(
                     modifier = Modifier.clickable {
-                        Toast.makeText(
-                            context,
-                            "Clicked item: $index",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        navController.navigate("scaffold_details")
                     }
                 ) {
                     ItemScaffold()
