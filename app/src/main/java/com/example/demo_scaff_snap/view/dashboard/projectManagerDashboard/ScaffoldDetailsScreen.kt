@@ -98,15 +98,16 @@ fun ScaffoldDetailsScreen() {
                     .fillMaxWidth()
                     .background(Color.White)
             ) {
-                Box(modifier = Modifier
-                    .constrainAs(tvPriority) {
-                        top.linkTo(parent.top, margin = 10.dp)
-                        start.linkTo(parent.start, margin = 10.dp)
-                    }
-                    .background(
-                        color = Color(0xFFF4EBFF), shape = RoundedCornerShape(8.dp)
-                    )
-                    .padding(horizontal = 12.dp, vertical = 10.dp)) {
+                Box(
+                    modifier = Modifier
+                        .constrainAs(tvPriority) {
+                            top.linkTo(parent.top, margin = 10.dp)
+                            start.linkTo(parent.start, margin = 10.dp)
+                        }
+                        .background(
+                            color = Color(0xFFF4EBFF), shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(horizontal = 12.dp, vertical = 10.dp)) {
                     Text(
                         text = "Medium",
                         fontFamily = FontUtils.poppinsMedium,
@@ -117,15 +118,16 @@ fun ScaffoldDetailsScreen() {
                     )
                 }
 
-                Box(modifier = Modifier
-                    .constrainAs(tvTag) {
-                        top.linkTo(parent.top, margin = 10.dp)
-                        end.linkTo(parent.end, margin = 10.dp)
-                    }
-                    .background(
-                        color = Color(0xFFEFEFEF), shape = RoundedCornerShape(8.dp)
-                    )
-                    .padding(horizontal = 12.dp, vertical = 10.dp)) {
+                Box(
+                    modifier = Modifier
+                        .constrainAs(tvTag) {
+                            top.linkTo(parent.top, margin = 10.dp)
+                            end.linkTo(parent.end, margin = 10.dp)
+                        }
+                        .background(
+                            color = Color(0xFFEFEFEF), shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(horizontal = 12.dp, vertical = 10.dp)) {
                     Text(
                         text = "Untagged",
                         fontFamily = FontUtils.poppinsMedium,
