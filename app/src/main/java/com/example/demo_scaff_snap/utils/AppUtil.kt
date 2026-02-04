@@ -1,5 +1,7 @@
 package com.example.demo_scaff_snap.utils
 
+import android.content.Context
+import android.net.ConnectivityManager
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -39,6 +41,11 @@ object FontUtils {
         Font(R.font.poppins_bold)
     )
 
+}
+
+fun isNetworkAvailable(context: Context): Boolean {
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    return connectivityManager.activeNetworkInfo?.isConnectedOrConnecting == true
 }
 
 @Composable
