@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.demo_scaff_snap.R
+import com.example.demo_scaff_snap.utils.DashedLine
 import com.example.demo_scaff_snap.utils.FontUtils
 
 @Preview(showBackground = true)
@@ -37,8 +38,9 @@ fun ScaffoldDetailsScreen() {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        val (clMain, tvTitle, icScan, etSearch, tvPriority, tvTag, tvChange,
-            tvDetails, tvPM, ivOne, tvProjectManager) = createRefs()
+        val (clMain, tvTitle, icScan, etSearch, tvPriority, tvTag, tvChange, tvDetails, tvPM, ivOne, tvProjectManager, scaffold, tvScaffold) = createRefs()
+
+        val (sd, ivSD, tvSD, ed, ivED, tvED, loc, ivLoc, tvLocation, dashLine, lr, ivLR, tvLR, tvSR) = createRefs()
 
         ConstraintLayout(
             modifier = Modifier
@@ -53,8 +55,7 @@ fun ScaffoldDetailsScreen() {
                     top.linkTo(parent.top)
                     end.linkTo(parent.end)
                     width = Dimension.fillToConstraints
-                }
-        ) {
+                }) {
             Image(
                 painter = painterResource(id = R.drawable.back_icon),
                 contentDescription = "Menu Icon",
@@ -63,8 +64,7 @@ fun ScaffoldDetailsScreen() {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start, margin = (16.dp))
                     centerVerticallyTo(parent)
-                }
-            )
+                })
 
             Text(
                 text = "SCF-SC-2025-001",
@@ -77,8 +77,7 @@ fun ScaffoldDetailsScreen() {
                     bottom.linkTo(icScan.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                }
-            )
+                })
         }
 
         Card(
@@ -90,8 +89,7 @@ fun ScaffoldDetailsScreen() {
                     start.linkTo(parent.start, margin = 10.dp)
                     end.linkTo(parent.end, margin = 10.dp)
                     width = Dimension.fillToConstraints
-                },
-            elevation = CardDefaults.cardElevation(
+                }, elevation = CardDefaults.cardElevation(
                 defaultElevation = 1.dp
             )
         ) {
@@ -100,16 +98,15 @@ fun ScaffoldDetailsScreen() {
                     .fillMaxWidth()
                     .background(Color.White)
             ) {
-                Box(
-                    modifier = Modifier
-                        .constrainAs(tvPriority) {
-                            top.linkTo(parent.top, margin = 10.dp)
-                            start.linkTo(parent.start, margin = 10.dp)
-                        }
-                        .background(
-                            color = Color(0xFFF4EBFF), shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding(horizontal = 12.dp, vertical = 10.dp)) {
+                Box(modifier = Modifier
+                    .constrainAs(tvPriority) {
+                        top.linkTo(parent.top, margin = 10.dp)
+                        start.linkTo(parent.start, margin = 10.dp)
+                    }
+                    .background(
+                        color = Color(0xFFF4EBFF), shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 10.dp)) {
                     Text(
                         text = "Medium",
                         fontFamily = FontUtils.poppinsMedium,
@@ -120,16 +117,15 @@ fun ScaffoldDetailsScreen() {
                     )
                 }
 
-                Box(
-                    modifier = Modifier
-                        .constrainAs(tvTag) {
-                            top.linkTo(parent.top, margin = 10.dp)
-                            end.linkTo(parent.end, margin = 10.dp)
-                        }
-                        .background(
-                            color = Color(0xFFEFEFEF), shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding(horizontal = 12.dp, vertical = 10.dp)) {
+                Box(modifier = Modifier
+                    .constrainAs(tvTag) {
+                        top.linkTo(parent.top, margin = 10.dp)
+                        end.linkTo(parent.end, margin = 10.dp)
+                    }
+                    .background(
+                        color = Color(0xFFEFEFEF), shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 10.dp)) {
                     Text(
                         text = "Untagged",
                         fontFamily = FontUtils.poppinsMedium,
@@ -166,7 +162,7 @@ fun ScaffoldDetailsScreen() {
                     fontSize = 12.sp,
                     color = Color(0xFF666666),
                     modifier = Modifier.constrainAs(tvPM) {
-                        top.linkTo(tvDetails.bottom, margin = 8.dp)
+                        top.linkTo(tvDetails.bottom, margin = 10.dp)
                         start.linkTo(tvDetails.start)
                     })
 
@@ -190,6 +186,170 @@ fun ScaffoldDetailsScreen() {
                         top.linkTo(tvPM.bottom, margin = 8.dp)
                         start.linkTo(ivOne.end, margin = 4.dp)
                     })
+
+                Text(
+                    text = "Scaffold ID",
+                    fontFamily = FontUtils.poppinsRegular,
+                    fontSize = 12.sp,
+                    color = Color(0xFF666666),
+                    modifier = Modifier.constrainAs(scaffold) {
+                        top.linkTo(tvPM.top)
+                        start.linkTo(tvPM.end)
+                        end.linkTo(parent.end)
+                    })
+                Text(
+                    text = "Boiler Unit 3 Upgrade",
+                    fontFamily = FontUtils.poppinsRegular,
+                    fontSize = 12.sp,
+                    color = Color.Black,
+                    modifier = Modifier.constrainAs(tvScaffold) {
+                        top.linkTo(tvPM.bottom, margin = 8.dp)
+                        start.linkTo(scaffold.start)
+                    })
+
+                Text(
+                    text = "Start Date",
+                    fontFamily = FontUtils.poppinsRegular,
+                    fontSize = 12.sp,
+                    color = Color(0xFF666666),
+                    modifier = Modifier.constrainAs(sd) {
+                        top.linkTo(tvProjectManager.bottom, margin = 10.dp)
+                        start.linkTo(ivOne.start)
+                    })
+
+                Image(
+                    painter = painterResource(R.drawable.ic_location),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .constrainAs(ivSD) {
+                            top.linkTo(sd.bottom, margin = 8.dp)
+                            start.linkTo(sd.start)
+                        })
+
+                Text(
+                    text = "10 May 2025",
+                    fontFamily = FontUtils.poppinsRegular,
+                    fontSize = 12.sp,
+                    color = Color.Black,
+                    modifier = Modifier.constrainAs(tvSD) {
+                        start.linkTo(ivSD.end, margin = 4.dp)
+                        top.linkTo(ivSD.top)
+                        bottom.linkTo(ivSD.bottom)
+                    })
+
+                Text(
+                    text = "End Date",
+                    fontFamily = FontUtils.poppinsRegular,
+                    fontSize = 12.sp,
+                    color = Color(0xFF666666),
+                    modifier = Modifier.constrainAs(ed) {
+                        top.linkTo(sd.top)
+                        start.linkTo(scaffold.start)
+                    })
+
+                Image(
+                    painter = painterResource(R.drawable.ic_location),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .constrainAs(ivED) {
+                            top.linkTo(sd.bottom, margin = 8.dp)
+                            start.linkTo(scaffold.start)
+                        })
+
+                Text(
+                    text = "10 May 2025",
+                    fontFamily = FontUtils.poppinsRegular,
+                    fontSize = 12.sp,
+                    color = Color.Black,
+                    modifier = Modifier.constrainAs(tvED) {
+                        start.linkTo(ivED.end, margin = 4.dp)
+                        top.linkTo(ivED.top)
+                        bottom.linkTo(ivED.bottom)
+                    })
+
+                Text(
+                    text = "Location",
+                    fontFamily = FontUtils.poppinsRegular,
+                    fontSize = 12.sp,
+                    color = Color(0xFF666666),
+                    modifier = Modifier.constrainAs(loc) {
+                        top.linkTo(tvSD.bottom, margin = 10.dp)
+                        start.linkTo(ivSD.start)
+                    })
+
+                Image(
+                    painter = painterResource(R.drawable.ic_location),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .constrainAs(ivLoc) {
+                            top.linkTo(loc.bottom, margin = 8.dp)
+                            start.linkTo(loc.start)
+                        })
+
+                Text(
+                    text = "Boiler Unit 3 Upgrade",
+                    fontFamily = FontUtils.poppinsRegular,
+                    fontSize = 12.sp,
+                    color = Color.Black,
+                    modifier = Modifier.constrainAs(tvLocation) {
+                        start.linkTo(ivLoc.end, margin = 4.dp)
+                        top.linkTo(ivLoc.top)
+                        bottom.linkTo(ivLoc.bottom)
+                    })
+
+                DashedLine(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .constrainAs(dashLine) {
+                            top.linkTo(tvLocation.bottom, margin = 10.dp)
+                        }, color = Color.Gray
+                )
+
+                Text(
+                    text = "Last Requested By",
+                    fontFamily = FontUtils.poppinsRegular,
+                    fontSize = 12.sp,
+                    color = Color(0xFF666666),
+                    modifier = Modifier.constrainAs(lr) {
+                        top.linkTo(dashLine.bottom, margin = 10.dp)
+                        start.linkTo(ivSD.start)
+                    })
+
+                Image(
+                    painter = painterResource(R.drawable.ic_location),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .constrainAs(ivLR) {
+                            top.linkTo(lr.bottom, margin = 8.dp)
+                            start.linkTo(lr.start)
+                        })
+
+                Text(
+                    text = "Boiler Unit 3 Upgrade",
+                    fontFamily = FontUtils.poppinsRegular,
+                    fontSize = 12.sp,
+                    color = Color.Black,
+                    modifier = Modifier.constrainAs(tvLR) {
+                        start.linkTo(ivLR.end, margin = 4.dp)
+                        top.linkTo(ivLR.top)
+                        bottom.linkTo(ivLR.bottom)
+                    })
+
+                Text(
+                    text = "Scaffold Requested",
+                    fontFamily = FontUtils.poppinsRegular,
+                    fontSize = 14.sp,
+                    color = Color(0xFF2F60F9),
+                    modifier = Modifier.constrainAs(tvSR) {
+                        top.linkTo(lr.top)
+                        start.linkTo(scaffold.start)
+                    })
+
             }
         }
     }
