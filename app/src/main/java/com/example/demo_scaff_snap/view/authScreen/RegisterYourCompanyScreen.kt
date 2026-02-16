@@ -1,21 +1,14 @@
 package com.example.demo_scaff_snap.view.authScreen
 
-import android.Manifest
-import android.app.Activity
-import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -31,79 +23,23 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import coil.size.Size
-import androidx.core.content.FileProvider
-import com.google.android.libraries.places.widget.Autocomplete
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
-import com.google.android.libraries.places.api.model.Place
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
-import java.io.File
 import com.example.demo_scaff_snap.R
+import com.example.demo_scaff_snap.model.commpanyLogin.CompanyLogInRequest
 import com.example.demo_scaff_snap.utils.FontUtils
+import com.example.demo_scaff_snap.utils.Resource
+import com.example.demo_scaff_snap.utils.isNetworkAvailable
+import com.example.demo_scaff_snap.utils.isValidEmail
+import com.example.demo_scaff_snap.viewModel.AuthViewModel
 
 @Composable
 fun RegisterYourCompanyScreen(navController: NavController) {
     val context = LocalContext.current
+    val viewModel: AuthViewModel = hiltViewModel()
+    val companyLoginState by viewModel.companyLoginState.collectAsState()
+
     val scrollState = rememberScrollState()
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-    var selectedBitmap by remember { mutableStateOf<Bitmap?>(null) }
-    var showImagePickerDialog by remember { mutableStateOf(false) }
-    var showSettingsDialog by remember { mutableStateOf(false) }
-    var cameraImageUri by remember { mutableStateOf<Uri?>(null) }
-
-    val permissionState = remember { mutableStateOf(false) }
-
-    val requiredPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        arrayOf(
-            Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.CAMERA
-        )
-    } else {
-        arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA
-        )
-    }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        val allGranted = permissions.values.all { it }
-        permissionState.value = allGranted
-        if (allGranted) {
-            showImagePickerDialog = true
-        } else {
-            showSettingsDialog = true
-        }
-    }
-
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture()
-    ) { success ->
-        if (success) {
-            selectedImageUri = cameraImageUri
-        }
-    }
-
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri ->
-        uri?.let { selectedImageUri = it }
-    }
-
-    val createImageFile: () -> File = {
-        val storageDir = context.getExternalFilesDir("Pictures")
-        File.createTempFile(
-            "IMG_${System.currentTimeMillis()}", ".jpg", storageDir
-        )
-    }
-
-    val onImageClick = {
-        permissionLauncher.launch(requiredPermissions)
-    }
 
     var companyName by remember { mutableStateOf("") }
     var mobileNumber by remember { mutableStateOf("") }
@@ -111,74 +47,6 @@ fun RegisterYourCompanyScreen(navController: NavController) {
     var address by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-
-    val autocompleteLauncher = rememberLauncherForActivityResult(
-        contract = StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val place = Autocomplete.getPlaceFromIntent(result.data!!)
-            //          address = place.address ?: ""
-        }
-    }
-
-    if (showSettingsDialog) {
-        AlertDialog(
-            onDismissRequest = { showSettingsDialog = false },
-            title = { Text("Permission Required") },
-            text = { Text("You have denied permissions. Please go to settings to enable them.") },
-            confirmButton = {
-                TextButton(onClick = {
-                    showSettingsDialog = false
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                        //             Intent.setData = Uri.fromParts("package", context.packageName, null)
-                    }
-                    context.startActivity(intent)
-                }) {
-                    Text("Open Settings")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showSettingsDialog = false }) {
-                    Text("Cancel")
-                }
-            })
-    }
-
-    if (showImagePickerDialog) {
-        AlertDialog(
-            onDismissRequest = { showImagePickerDialog = false },
-            title = { Text("Select Image") },
-            text = {
-                Column {
-                    Text(
-                        "Camera", modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                val imageFile = createImageFile()
-                                val imageUri = FileProvider.getUriForFile(
-                                    context, "${context.packageName}.provider", imageFile
-                                )
-                                cameraImageUri = imageUri
-                                cameraLauncher.launch(imageUri)
-                                showImagePickerDialog = false
-                            }
-                            .padding(8.dp))
-                    Text(
-                        "Gallery", modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                galleryLauncher.launch("image/*")
-                                showImagePickerDialog = false
-                            }
-                            .padding(8.dp))
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = { showImagePickerDialog = false }) {
-                    Text("Cancel")
-                }
-            })
-    }
 
     Column(
         modifier = Modifier
@@ -233,46 +101,15 @@ fun RegisterYourCompanyScreen(navController: NavController) {
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.CenterHorizontally)
             ) {
-                val imageModifier =
-                    Modifier
+                Image(
+                    painter = painterResource(R.drawable.ic_launcher_foreground),
+                    contentDescription = "Default Image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
                         .size(100.dp)
-                        .clip(CircleShape)
-                        .border(1.dp, Color.Gray, CircleShape)
-                        .clickable { onImageClick() }
-
-                when {
-                    selectedBitmap != null -> {
-                        Image(
-                            bitmap = selectedBitmap!!.asImageBitmap(),
-                            contentDescription = "Selected Image",
-                            contentScale = ContentScale.Crop,
-                            modifier = imageModifier
-                        )
-                    }
-
-                    selectedImageUri != null -> {
-                        val painter = rememberAsyncImagePainter(
-                            ImageRequest.Builder(context).data(selectedImageUri).size(Size.ORIGINAL)
-                                .crossfade(true).allowHardware(false).build()
-                        )
-
-                        Image(
-                            painter = painter,
-                            contentDescription = "Selected Image",
-                            contentScale = ContentScale.Crop,
-                            modifier = imageModifier
-                        )
-                    }
-
-                    else -> {
-                        Image(
-                            painter = painterResource(R.drawable.ic_launcher_foreground),
-                            contentDescription = "Default Image",
-                            contentScale = ContentScale.Crop,
-                            modifier = imageModifier
-                        )
-                    }
-                }
+                        .clip(androidx.compose.foundation.shape.CircleShape)
+                        .border(1.dp, Color.Gray, androidx.compose.foundation.shape.CircleShape)
+                )
             }
 
             OutlinedTextField(
@@ -292,18 +129,17 @@ fun RegisterYourCompanyScreen(navController: NavController) {
                     .padding(top = 30.dp)
             )
 
-
             OutlinedTextField(
                 value = mobileNumber,
                 onValueChange = { mobileNumber = it },
                 label = {
                     Text(
-                        "Mobile Number", fontFamily = FontUtils.poppinsRegular,   // ← Label Font
+                        "Mobile Number", fontFamily = FontUtils.poppinsRegular,
                         fontSize = 14.sp
                     )
                 },
                 textStyle = TextStyle(
-                    fontFamily = FontUtils.poppinsRegular,       // ← Typed Text Font
+                    fontFamily = FontUtils.poppinsRegular,
                     fontSize = 14.sp, color = Color.Black
                 ),
                 shape = RoundedCornerShape(12.dp),
@@ -317,12 +153,12 @@ fun RegisterYourCompanyScreen(navController: NavController) {
                 onValueChange = { email = it },
                 label = {
                     Text(
-                        "Email", fontFamily = FontUtils.poppinsRegular,    // ← Label font
+                        "Email", fontFamily = FontUtils.poppinsRegular,
                         fontSize = 14.sp
                     )
                 },
                 textStyle = TextStyle(
-                    fontFamily = FontUtils.poppinsRegular,        // ← Typed text font
+                    fontFamily = FontUtils.poppinsRegular,
                     fontSize = 14.sp, color = Color.Black
                 ),
                 shape = RoundedCornerShape(12.dp),
@@ -331,37 +167,23 @@ fun RegisterYourCompanyScreen(navController: NavController) {
                     .padding(top = 10.dp)
             )
 
-
-            // 🔍 Location Picker on click
             OutlinedTextField(
                 value = address,
-                onValueChange = {
-                    // address readOnly hai, isliye blank ignore
-                },
+                onValueChange = { address = it },
                 label = {
                     Text(
-                        "Address", fontFamily = FontUtils.poppinsRegular,   // ← Label font
+                        "Address", fontFamily = FontUtils.poppinsRegular,
                         fontSize = 14.sp
                     )
                 },
                 textStyle = TextStyle(
-                    fontFamily = FontUtils.poppinsRegular,       // ← Text font
+                    fontFamily = FontUtils.poppinsRegular,
                     fontSize = 14.sp, color = Color.Black
                 ),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 10.dp)
-                    .clickable {
-//                        val fields = listOf(
-//                            Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS
-//                        )
-//                        val intent = Autocomplete.IntentBuilder(
-//                            AutocompleteActivityMode.FULLSCREEN, fields
-//                        ).build(context)
-//                        autocompleteLauncher.launch(intent)
-                    },
-                readOnly = true
             )
 
             OutlinedTextField(
@@ -369,12 +191,12 @@ fun RegisterYourCompanyScreen(navController: NavController) {
                 onValueChange = { password = it },
                 label = {
                     Text(
-                        "Create Password", fontFamily = FontUtils.poppinsRegular,   // ← Label font
+                        "Create Password", fontFamily = FontUtils.poppinsRegular,
                         fontSize = 14.sp
                     )
                 },
                 textStyle = TextStyle(
-                    fontFamily = FontUtils.poppinsRegular,       // ← Input text font
+                    fontFamily = FontUtils.poppinsRegular,
                     fontSize = 14.sp, color = Color.Black
                 ),
                 shape = RoundedCornerShape(12.dp),
@@ -383,18 +205,17 @@ fun RegisterYourCompanyScreen(navController: NavController) {
                     .padding(top = 10.dp)
             )
 
-
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
                 label = {
                     Text(
-                        "Confirm Password", fontFamily = FontUtils.poppinsRegular,   // ← Label font
+                        "Confirm Password", fontFamily = FontUtils.poppinsRegular,
                         fontSize = 14.sp
                     )
                 },
                 textStyle = TextStyle(
-                    fontFamily = FontUtils.poppinsRegular,       // ← Typed text font
+                    fontFamily = FontUtils.poppinsRegular,
                     fontSize = 14.sp, color = Color.Black
                 ),
                 shape = RoundedCornerShape(12.dp),
@@ -404,7 +225,57 @@ fun RegisterYourCompanyScreen(navController: NavController) {
             )
 
             Button(
-                onClick = { /* Handle submit */ },
+                onClick = {
+                    when {
+                        companyName.isBlank() -> {
+                            Toast.makeText(context, "Enter company name", Toast.LENGTH_SHORT).show()
+                        }
+
+                        mobileNumber.isBlank() -> {
+                            Toast.makeText(context, "Enter mobile number", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                        email.isBlank() -> {
+                            Toast.makeText(context, "Enter Email", Toast.LENGTH_SHORT).show()
+                        }
+
+                        !isValidEmail(email) -> {
+                            Toast.makeText(context, "Invalid Email Format", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                        address.isBlank() -> {
+                            Toast.makeText(context, "Enter company address", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                        password.isBlank() -> {
+                            Toast.makeText(context, "Enter password", Toast.LENGTH_SHORT).show()
+                        }
+
+                        confirmPassword.isBlank() -> {
+                            Toast.makeText(context, "Enter confirm password", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                        else -> {
+                            viewModel.companyLogin(
+                                CompanyLogInRequest(
+                                    address,
+                                    "+91",
+                                    email,
+                                    "",
+                                    0.0,
+                                    0.0,
+                                    mobileNumber,
+                                    companyName,
+                                    password
+                                )
+                            )
+                        }
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)
@@ -420,6 +291,35 @@ fun RegisterYourCompanyScreen(navController: NavController) {
                         fontSize = 14.sp, fontFamily = FontUtils.poppinsSemiBold
                     )
                 )
+            }
+        }
+
+        LaunchedEffect(companyLoginState) {
+            when (companyLoginState) {
+                is Resource.Success -> {
+                    val response = companyLoginState as Resource.Success
+                    if (response.code == 200) {
+                        Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
+                    } else if (response.code == 400) {
+                        Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                is Resource.Error -> {
+                    Toast.makeText(context, companyLoginState.message, Toast.LENGTH_SHORT).show()
+                }
+
+                is Resource.InternetError -> {
+                    if (!isNetworkAvailable(context)) {
+                        Toast.makeText(
+                            context,
+                            "Check your internet connection.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                else -> Unit
             }
         }
     }

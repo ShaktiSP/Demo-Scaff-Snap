@@ -1,7 +1,9 @@
 package com.example.demo_scaff_snap.utils
 
+import android.Manifest
 import android.content.Context
 import android.net.ConnectivityManager
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -40,11 +42,26 @@ object FontUtils {
     val poppinsBold = FontFamily(
         Font(R.font.poppins_bold)
     )
-
 }
 
+fun isValidEmail(email: String): Boolean {
+    val regex = Regex(
+        "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9!#\$%&'*+/=?^_`{|}~-]+(\\.[A-Za-z0-9!#\$%&'*+/=?^_`{|}~-]+)*)" +
+                "@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,}$"
+    )
+    return regex.matches(email)
+}
+
+@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+fun isNetworkConnected(context: Context): Boolean {
+    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+    return cm!!.activeNetworkInfo != null && cm.activeNetworkInfo!!.isConnected
+}
+
+
 fun isNetworkAvailable(context: Context): Boolean {
-    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     return connectivityManager.activeNetworkInfo?.isConnectedOrConnecting == true
 }
 

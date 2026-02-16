@@ -1,5 +1,6 @@
 package com.example.demo_scaff_snap.view.authScreen
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +20,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -34,14 +38,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.demo_scaff_snap.R
+import com.example.demo_scaff_snap.model.login.LoginRequest
 import com.example.demo_scaff_snap.utils.FontUtils
+import com.example.demo_scaff_snap.utils.Resource
+import com.example.demo_scaff_snap.utils.isNetworkAvailable
+import com.example.demo_scaff_snap.utils.isValidEmail
 import com.example.demo_scaff_snap.view.Screen
+import com.example.demo_scaff_snap.viewModel.AuthViewModel
 
-/*@Preview (showBackground = true)*/
 @Composable
 fun LogInScreen(navController: NavController) {
+
+    val context = LocalContext.current
+    val viewModel: AuthViewModel = hiltViewModel()
+    val loginState by viewModel.loginState.collectAsState()
 
     var companyID by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -71,7 +84,6 @@ fun LogInScreen(navController: NavController) {
                     .clickable {
                         navController.popBackStack()
                     })
-
             Text(
                 text = "LOGIN",
                 color = Color.White,
@@ -190,8 +202,23 @@ fun LogInScreen(navController: NavController) {
 
             Button(
                 onClick = {
-                    navController.navigate(Screen.PmMainScreen.route) {
-                        popUpTo(Screen.LogInScreen.route) { inclusive = false }
+                    when {
+                        companyID.isBlank() -> {
+                            Toast.makeText(context, "Enter Company ID", Toast.LENGTH_SHORT).show()
+                        }
+                        email.isBlank() -> {
+                            Toast.makeText(context, "Enter Email", Toast.LENGTH_SHORT).show()
+                        }
+                        !isValidEmail(email) -> {
+                            Toast.makeText(context, "Invalid Email Format", Toast.LENGTH_SHORT).show()
+                        }
+                        password.isBlank() -> {
+                            Toast.makeText(context, "Enter Password", Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            val request = LoginRequest(companyID, email, password, "PROJECT_MANAGER")
+                            viewModel.login(request)
+                        }
                     }
                 },
                 modifier = Modifier
@@ -210,8 +237,33 @@ fun LogInScreen(navController: NavController) {
                     )
                 )
             }
+        }
 
+        LaunchedEffect(loginState) {
+            when (loginState) {
+                is Resource.Success -> {
+                    val response = loginState as Resource.Success
+                    if (response.code == 200) {
+                         navController.navigate(Screen.PmMainScreen.route) {
+                            popUpTo(Screen.LogInScreen.route) { inclusive = true }
+                        }
+                        Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
+                    } else if (response.code == 400) {
+                        Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                is Resource.Error -> {
+                    Toast.makeText(context, loginState.message, Toast.LENGTH_SHORT).show()
+                }
+
+                is Resource.InternetError -> {
+                    if (!isNetworkAvailable(context)) {
+                        Toast.makeText(context, "Check your internet connection.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                else -> Unit
+            }
         }
     }
-
 }

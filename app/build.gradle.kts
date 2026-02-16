@@ -116,7 +116,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.37.3")
 
 // Map Places
-    implementation("com.google.android.libraries.places:places:5.0.0")
+    implementation("com.google.android.libraries.places:places:5.1.1")
 
     // Modal Drawer Layout
     implementation("androidx.drawerlayout:drawerlayout:1.2.0")
