@@ -73,7 +73,7 @@ fun HomeScreen() {
                         },
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    // Menu Icon - Drawer khulne ke liye
+                    // Menu Icon
                     Image(
                         painter = painterResource(id = R.drawable.ic_menue),
                         contentDescription = "Menu Icon",
