@@ -3,55 +3,60 @@ package com.example.demo_scaff_snap.view.dashboard.projectManagerDashboard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
+import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import com.example.demo_scaff_snap.R
 import com.example.demo_scaff_snap.utils.FontUtils
-import com.example.demo_scaff_snap.view.Screen
+import com.example.demo_scaff_snap.view.FilterBottomSheet
 import com.example.demo_scaff_snap.view.items.ItemScaffold
+
 @Composable
-fun ScaffoldLogScreen(navController : NavController) {
+fun ScaffoldLogScreen(navController: NavController) {
 
     var searchText by remember { mutableStateOf("") }
-    val context = LocalContext.current
 
-    ConstraintLayout(
+    var showFilter by remember { mutableStateOf(false) }
+
+    val view = LocalView.current
+    DisposableEffect(Unit) {
+        val window = (view.context as? android.app.Activity)?.window
+        window?.let {
+            it.statusBarColor = Color(0xFFFDB001).toArgb()
+            WindowCompat.getInsetsController(it, view).isAppearanceLightStatusBars = false
+        }
+        onDispose {
+            window?.let {
+                it.statusBarColor = Color.White.toArgb()
+                WindowCompat.getInsetsController(it, view).isAppearanceLightStatusBars = true
+            }
+        }
+    }
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        val (clMain, tvTitle, icScan, ivFilter, etSearch, rvLC) = createRefs()
 
-        ConstraintLayout(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(65.dp)
@@ -59,111 +64,87 @@ fun ScaffoldLogScreen(navController : NavController) {
                     Brush.verticalGradient(
                         colors = listOf(Color(0xFFFDB001), Color(0xFFD66801))
                     )
-                )
-                .constrainAs(clMain) {
-                    top.linkTo(parent.top)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                }
+                ),
+            contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_bg_scan),
-                contentDescription = "Menu Icon",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.constrainAs(icScan) {
-                    top.linkTo(parent.top)
-                    end.linkTo(parent.end, margin = (16.dp))
-                    centerVerticallyTo(parent)
-                }
-            )
-
             Text(
                 text = "SCAFFOLD LOG",
-                textAlign = TextAlign.Start,
+                textAlign = TextAlign.Center,
                 fontFamily = FontUtils.poppinsSemiBold,
                 fontSize = 14.sp,
-                color = Color.White,
-                modifier = Modifier.constrainAs(tvTitle) {
-                    top.linkTo(icScan.top)
-                    bottom.linkTo(icScan.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
+                color = Color.White
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.ic_bg_scan),
+                contentDescription = "Scan Icon",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 16.dp)
             )
         }
 
-        Card(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp)
-                .constrainAs(etSearch) {
-                    top.linkTo(clMain.bottom)
-                    start.linkTo(parent.start, margin = 10.dp)
-                    end.linkTo(ivFilter.start, margin = 10.dp)
-                    width = Dimension.fillToConstraints
-                },
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 1.dp
-            )
+                .padding(start = 10.dp, end = 10.dp, top = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            TextField(
-                value = searchText,
-                onValueChange = { searchText = it },
-                placeholder = {
-                    Text("Search Scaffold ID")
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Search
-                ),
-                keyboardActions = KeyboardActions(
-                    onSearch = { /* perform search */ }
-                ),
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    disabledContainerColor = Color.White,
-
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
+            Card(
+                modifier = Modifier.weight(1f),
+                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+            ) {
+                TextField(
+                    value = searchText,
+                    onValueChange = { searchText = it },
+                    placeholder = { Text("Search Scaffold ID") },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(onSearch = { }),
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White,
+                        disabledContainerColor = Color.White,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
+                    )
                 )
+            }
+            Image(
+                painter = painterResource(id = R.drawable.ic_mage_filter),
+                contentDescription = "Filter Icon",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.clickable { showFilter = true }
             )
         }
-
-        Image(
-            painter = painterResource(id = R.drawable.ic_mage_filter),
-            contentDescription = "Menu Icon",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.constrainAs(ivFilter) {
-                top.linkTo(etSearch.top,  margin = (10.dp))
-                bottom.linkTo(etSearch.bottom)
-                end.linkTo(parent.end, margin = (10.dp))
-            }
-        )
 
         LazyColumn(
             modifier = Modifier
-                .padding(10.dp)
-                .constrainAs(rvLC) {
-                    top.linkTo(etSearch.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                    height = Dimension.fillToConstraints
-                    width = Dimension.fillToConstraints
-                }
+                .fillMaxSize()
+                .padding(10.dp),
+            contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            items(10) { index ->
-                Box(
-                    modifier = Modifier.clickable {
-                        navController.navigate("scaffold_details")
-                    }
-                ) {
+            items(10) {
+                Box(modifier = Modifier.clickable {
+                    navController.navigate("scaffold_details")
+                }) {
                     ItemScaffold()
                 }
             }
         }
+    }
+
+    if (showFilter) {
+        FilterBottomSheet(
+            onDismiss = { showFilter = false },
+            onApply = { date, status, tag, priority ->
+
+                showFilter = false
+            }
+        )
     }
 }

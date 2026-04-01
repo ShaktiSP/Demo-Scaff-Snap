@@ -23,9 +23,9 @@ fun UserProfileMenuDrawer(onClose: () -> Unit) {
     ModalDrawerSheet(
         modifier = Modifier
             .fillMaxWidth(0.85f)
-            .clip(RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp)),
+            .clip(RoundedCornerShape(topEnd = 20.dp)),
         drawerContainerColor = Color.White,
-        drawerShape = RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp)
+        drawerShape = RoundedCornerShape(topEnd = 20.dp)
     ) {
         Column(
             modifier = Modifier
